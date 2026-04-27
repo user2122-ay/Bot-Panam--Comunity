@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, Events } = require('discord.js');
 const fs = require('fs');
 
 const client = new Client({
@@ -14,26 +14,31 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// 📂 Cargar comandos
+// 📂 Cargar comandos slash
 const commandFiles = fs.readdirSync('./comandos').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
   const command = require(`./comandos/${file}`);
-  client.commands.set(command.name, command);
+  client.commands.set(command.data.name, command);
 }
 
-// 📂 Cargar eventos
-const eventFiles = fs.readdirSync('./eventos').filter(file => file.endsWith('.js'));
+// ⚡ Evento interactionCreate (slash)
+client.on(Events.InteractionCreate, async interaction => {
+  if (!interaction.isChatInputCommand()) return;
 
-for (const file of eventFiles) {
-  const event = require(`./eventos/${file}`);
-  
-  if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args, client));
-  } else {
-    client.on(event.name, (...args) => event.execute(...args, client));
+  const command = client.commands.get(interaction.commandName);
+  if (!command) return;
+
+  try {
+    await command.execute(interaction);
+  } catch (error) {
+    console.error(error);
+    await interaction.reply({ content: 'Error ejecutando comando.', ephemeral: true });
   }
-}
+});
 
-// 🔐 Token desde Railway ENV
+client.once(Events.ClientReady, () => {
+  console.log(`✅ Bot listo como ${client.user.tag}`);
+});
+
 client.login(process.env.TOKEN);
