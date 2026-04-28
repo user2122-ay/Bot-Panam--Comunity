@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 const afkUsers = new Map();
 
@@ -24,7 +24,23 @@ module.exports = {
       await interaction.member.setNickname(`[AFK] ${interaction.member.displayName}`);
     } catch {}
 
-    await interaction.reply(`😴 Estás AFK: ${razon}`);
+    const embed = new EmbedBuilder()
+      .setColor('#2b2d31') // color oscuro pro
+      .setAuthor({
+        name: `${interaction.user.username} está AFK`,
+        iconURL: interaction.user.displayAvatarURL()
+      })
+      .setDescription(`💤 **Modo AFK activado**`)
+      .addFields(
+        { name: '📝 Razón', value: razon, inline: false },
+        { name: '⏰ Desde', value: `<t:${Math.floor(Date.now() / 1000)}:R>`, inline: true }
+      )
+      .setFooter({
+        text: 'PANAMÁ COMMUNITY 507',
+      })
+      .setTimestamp();
+
+    await interaction.reply({ embeds: [embed] });
   },
 
   afkUsers
