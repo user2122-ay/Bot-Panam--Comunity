@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 // 👮 IDs permitidos
 const allowedUsers = [
@@ -23,7 +23,7 @@ module.exports = {
 
   async execute(interaction) {
 
-    // 🚫 Permisos
+    // 🚫 Permiso por ID
     if (!allowedUsers.includes(interaction.user.id)) {
       return interaction.reply({
         content: '❌ No tienes permiso para usar este comando.',
@@ -34,21 +34,12 @@ module.exports = {
     const canal = interaction.options.getChannel('canal');
     const mensaje = interaction.options.getString('mensaje');
 
-    // 🎨 Embed bonito
-    const embed = new EmbedBuilder()
-      .setColor('#2b2d31')
-      .setDescription(mensaje)
-      .setFooter({
-        text: `Enviado por ${interaction.user.username}`,
-        iconURL: interaction.user.displayAvatarURL()
-      })
-      .setTimestamp();
-
     try {
-      await canal.send({ embeds: [embed] });
+      // 📢 Enviar mensaje NORMAL (no embed)
+      await canal.send(mensaje);
 
       await interaction.reply({
-        content: '✅ Mensaje enviado correctamente.',
+        content: '✅ Mensaje enviado.',
         ephemeral: true
       });
 
