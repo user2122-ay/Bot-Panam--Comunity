@@ -9,18 +9,18 @@ module.exports = {
     const numero = Math.floor(Math.random() * 6) + 1;
 
     const embed = new EmbedBuilder()
-      .setColor('#00AEEF') // azul bonito
+      .setColor('#0099FF') // 🔵 azul
       .setAuthor({
         name: `${interaction.user.username} lanzó un dado 🎲`,
         iconURL: interaction.user.displayAvatarURL()
       })
       .setDescription(`🎯 **Resultado:** \`${numero}\``)
 
-      // 🎲 GIF animado de dado
-      .setImage('https://media.tenor.com/8rQ7K9gXx1kAAAAC/dice-roll.gif')
+      // 🖼️ IMAGEN GRANDE (la tuya)
+      .setImage('https://cdn.discordapp.com/attachments/1498507131404550226/1498533369804361758/tirada-de-dados-blancos-numero-3-animation-gif-download-9058689.gif?ex=69f18174&is=69f02ff4&hm=0741e882fa25862784e921f6f01fe6fd9758704f350fa5cb777c389d3c8d1808&')
 
-      // 🖼️ LOGO DEL SERVER (cámbialo por el tuyo)
-      .setThumbnail('https://i.imgur.com/yourlogo.png')
+      // 👤 IMAGEN PEQUEÑA (foto del usuario)
+      .setThumbnail(interaction.user.displayAvatarURL())
 
       .addFields(
         { name: '🎮 Jugador', value: `<@${interaction.user.id}>`, inline: true },
