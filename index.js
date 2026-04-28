@@ -120,4 +120,5 @@ async function registerCommands() {
     console.error(error);
   }
 }
+registerCommands();
 client.login(process.env.TOKEN);
